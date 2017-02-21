@@ -1,3 +1,4 @@
 .idea/
 .env/
 geckodriver.log
+ghostdriver.log
