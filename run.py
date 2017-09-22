@@ -1,3 +1,5 @@
+import json
+import os
 import random
 import re
 import time
@@ -38,6 +40,9 @@ def select_service(service_name):
 
 
 def select_person(person_name):
+    if not person_name:
+        return
+
     time.sleep(2)
     select_person_dropdown = driver.find_elements_by_css_selector(
         "form#advancedResevation div.column2 div.graphicSelectContainer")[1]
@@ -54,20 +59,20 @@ def select_dates(start_date, stop_date):
     time.sleep(2)
     time_picker_input = driver.find_element_by_css_selector("#rangePicker")
     time_picker_input.clear()
-    time_picker_input.send_keys(start_date + ' | ' + stop_date)
+    time_picker_input.send_keys(start_date + '  |  ' + stop_date)
     driver.find_element_by_css_selector("body").click()
     driver.find_element_by_css_selector("body").click()
 
 
 def submit_search_form():
-    time.sleep(2)
+    time.sleep(5)
     print "Performing search"
     submit_button = driver.find_element_by_css_selector("input[type=submit]")
     submit_button.click()
 
 
 def close_popup():
-    time.sleep(1)
+    time.sleep(2)
     try:
         driver.find_element_by_css_selector("div#__popup button.reject").click()
     except NoSuchElementException as e:
@@ -92,21 +97,31 @@ def find_text(text):
     return text_found
 
 
+def load_config():
+    with open('config.json') as data_file:
+        return json.load(data_file)
+
+
 def main():
+    config = load_config()
+
     open_page()
-    log_in("", "")
-    select_service("internisty")
-    select_person(u"W\u0118GRZYN")
-    select_dates('10-03-2017', '10-03-2017')
+    log_in(config["luxmedUsername"], config["luxmedPassword"])
+    select_service(config["service"])
+    select_person(config["person"])
+    select_dates(config["dateFrom"], config["dateTo"])
+
     while True:
         submit_search_form()
         close_popup()
-        sleep_for_a_moment()
-        if any_free_slot():
-            print "GOOOOOOT IT !!!!!!!!!"
-            break
 
+        if any_free_slot():
+            print "**** GOOOOOOT IT ****"
+            os.system("play ./sms_mario.wav")
+            break
             # driver.close()
+
+        sleep_for_a_moment()
 
 
 main()
