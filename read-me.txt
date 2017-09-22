@@ -1,6 +1,10 @@
 # Skrypt w Pythonie 2.x
+
 # Wersja przygotowana dla systemu Linux.
   Aby użyć narzędzia w innym systemie należy zmienić sterownik Selenium (katalog 'selenium-driver')
   oraz zmienić w pliku run.sh (os.system(...)) nazwe programu, ktory umie odtworzyc plik dzwiękowy .wav.
+
 # Plik config.json_example należy przekopiować do pliku config.json i odpowiednio wypełnić. Nazwe lekarza
   ('person') można pozostawić pustą. Reszta pól jest wymagana.
+
+# Przed uruchomieniem ('run.sh') należy zainstalować zależności ('install.sh').
