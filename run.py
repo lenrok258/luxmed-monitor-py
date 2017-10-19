@@ -8,10 +8,9 @@ from selenium import webdriver
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.common.keys import Keys
 
+driver = webdriver.Chrome()
 
-def open_page():
-    global driver
-    driver = webdriver.Chrome()
+def open_page():    
     driver.get("https://portalpacjenta.luxmed.pl/PatientPortal/Reservations/Reservation/Find?firstTry=True")
     assert "LUX MED" in driver.title
 
@@ -102,9 +101,7 @@ def load_config():
         return json.load(data_file)
 
 
-def main():
-    config = load_config()
-
+def perform_endless_search(config):
     open_page()
     log_in(config["luxmedUsername"], config["luxmedPassword"])
     select_service(config["service"])
@@ -124,5 +121,12 @@ def main():
 
         sleep_for_a_moment()
 
+def main():
+    config = load_config()
+    while True:
+        try:
+            perform_endless_search(config)
+        except Exception as e:
+            print e
 
 main()
