@@ -28,32 +28,32 @@ def log_in(login, passwd):
 
 
 def select_service(service_name):
-    select_service_dropdown = driver.find_elements_by_css_selector(
-        "form#advancedResevation div.column2 div.graphicSelectContainer")[0]
-    select_service_dropdown.click()
-    select_service_search = driver.find_element_by_css_selector("input.search-select")
-    select_service_search.clear()
-    select_service_search.send_keys(service_name)
-    select_service_checkbox = driver.find_element_by_css_selector("ul#__selectOptions li:not(.hidden)")
-    select_service_checkbox.click()
-    driver.find_element_by_css_selector("body").click()
-
+    select_value_in_dropdown(2, 0, service_name)
 
 def select_person(person_name):
     if not person_name:
         return
 
     time.sleep(2)
-    select_person_dropdown = driver.find_elements_by_css_selector(
-        "form#advancedResevation div.column2 div.graphicSelectContainer")[1]
-    select_person_dropdown.click()
-    select_person_search = driver.find_element_by_css_selector("input.search-select")
-    select_person_search.clear()
-    select_person_search.send_keys(person_name)
-    select_person_checkbox = driver.find_element_by_css_selector("ul#__selectOptions li:not(.hidden)")
-    select_person_checkbox.click()
-    driver.find_element_by_css_selector("body").click()
+    select_value_in_dropdown(2, 1, person_name)
 
+def select_location(location):
+    if not location:
+        return
+
+    time.sleep(2)
+    select_value_in_dropdown(1, 1, location)
+
+def select_value_in_dropdown(column_index, selector_index, value_to_select):
+    css_path = "form#advancedResevation div.column{} div.graphicSelectContainer".format(column_index)
+    select_location_dropdown = driver.find_elements_by_css_selector(css_path)[selector_index]
+    select_location_dropdown.click()
+    select_location_search = driver.find_element_by_css_selector("input.search-select")
+    select_location_search.clear()
+    select_location_search.send_keys(value_to_select)
+    select_location_checkbox = driver.find_element_by_css_selector("ul#__selectOptions li:not(.hidden)")
+    select_location_checkbox.click()
+    driver.find_element_by_css_selector("body").click()
 
 def select_dates(start_date, stop_date):
     time.sleep(2)
@@ -109,6 +109,7 @@ def main():
     log_in(config["luxmedUsername"], config["luxmedPassword"])
     select_service(config["service"])
     select_person(config["person"])
+    select_location(config["location"])
     select_dates(config["dateFrom"], config["dateTo"])
 
     while True:
