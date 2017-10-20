@@ -5,6 +5,6 @@
   oraz zmienić w pliku run.sh (os.system(...)) nazwe programu, ktory umie odtworzyc plik dzwiękowy .wav.
 
 # Plik config.json_example należy przekopiować do pliku config.json i odpowiednio wypełnić. Nazwe lekarza
-  ('person') można pozostawić pustą. Reszta pól jest wymagana.
+  ('person') oraz placówkę ('location') można pozostawić pustą. Reszta pól jest wymagana.
 
 # Przed uruchomieniem ('run.sh') należy zainstalować zależności ('install.sh').
