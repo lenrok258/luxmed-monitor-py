@@ -3,3 +3,4 @@
 geckodriver.log
 ghostdriver.log
 config.json
+.vscode/

@@ -10,7 +10,8 @@ from selenium.webdriver.common.keys import Keys
 
 driver = webdriver.Chrome()
 
-def open_page():    
+
+def open_page():
     driver.get("https://portalpacjenta.luxmed.pl/PatientPortal/Reservations/Reservation/Find?firstTry=True")
     assert "LUX MED" in driver.title
 
@@ -29,6 +30,7 @@ def log_in(login, passwd):
 def select_service(service_name):
     select_value_in_dropdown(2, 0, service_name)
 
+
 def select_person(person_name):
     if not person_name:
         return
@@ -36,12 +38,14 @@ def select_person(person_name):
     time.sleep(2)
     select_value_in_dropdown(2, 1, person_name)
 
+
 def select_location(location):
     if not location:
         return
 
     time.sleep(2)
     select_value_in_dropdown(1, 1, location)
+
 
 def select_value_in_dropdown(column_index, selector_index, value_to_select):
     css_path = "form#advancedResevation div.column{} div.graphicSelectContainer".format(column_index)
@@ -53,6 +57,7 @@ def select_value_in_dropdown(column_index, selector_index, value_to_select):
     select_location_checkbox = driver.find_element_by_css_selector("ul#__selectOptions li:not(.hidden)")
     select_location_checkbox.click()
     driver.find_element_by_css_selector("body").click()
+
 
 def select_dates(start_date, stop_date):
     time.sleep(2)
@@ -78,11 +83,22 @@ def close_popup():
         print e
 
 
-def any_free_slot():
-    slots_elements = driver.find_elements_by_css_selector('.reserveTable')
-    print "Free slots found: {}".format(slots_elements)
-    return len(slots_elements) != 0
+def any_free_slot(person_excluded_csv):
+    slots_elements = driver.find_elements_by_css_selector('.reserveTable td[colspan="3"] div')
+    for slot in slots_elements:
+        print "Free slot found: {}".format(slot.text)
+        if contain_excluded_person(person_excluded_csv, slot.text):
+            print "Slot matches person_excluded_csv. Will be skipped"
+            continue
+        else:
+            return True
+    return False
 
+def contain_excluded_person(person_excluded_csv, slot_text):
+    for excluded_person in person_excluded_csv.split(','):
+        if excluded_person in slot_text:
+            return True
+    return False
 
 def sleep_for_a_moment():
     sleep_time = random.randint(1, 20)
@@ -113,13 +129,14 @@ def perform_endless_search(config):
         submit_search_form()
         close_popup()
 
-        if any_free_slot():
+        if any_free_slot(config["person-excluded-csv"]):
             print "**** GOOOOOOT IT ****"
             os.system("play ./sms_mario.wav")
             break
             # driver.close()
 
         sleep_for_a_moment()
+
 
 def main():
     config = load_config()
