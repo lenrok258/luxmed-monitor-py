@@ -84,7 +84,7 @@ def close_popup():
 
 
 def any_free_slot(person_excluded_csv):
-    slots_elements = driver.find_elements_by_css_selector('.reserveTable td[colspan="3"] div')
+    slots_elements = driver.find_elements_by_css_selector('.reserveTable td[colspan="3"] :first-child[data-sort]')
     for slot in slots_elements:
         print "Free slot found: {}".format(slot.text)
         if contain_excluded_person(person_excluded_csv, slot.text):
@@ -132,6 +132,7 @@ def perform_endless_search(config):
         if any_free_slot(config["person-excluded-csv"]):
             print "**** GOOOOOOT IT ****"
             os.system("play ./sms_mario.wav")
+            sleep_for_a_moment()
             break
             # driver.close()
 
