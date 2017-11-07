@@ -26,10 +26,13 @@ def log_in(login, passwd):
     input_submit.click()
 
 def select_service_group(service_group):
-    driver.find_element_by_css_selector("a[datasubcategory*={}]".format(service_group)).click()
+    driver.find_element_by_css_selector('a[datasubcategory*="{}"]'.format(service_group)).click()
 
 def select_appointment_button():
-    driver.find_element_by_xpath("//a[contains(@class, 'activity_button')][contains(text(),'Wizyta')]").click()
+    try:
+        driver.find_element_by_xpath("//a[contains(@class, 'activity_button')][contains(text(),'Wizyta')]").click()
+    except NoSuchElementException as e:
+        print "Appointment page not available"
 
 def select_service(service_name):
     select_value_in_dropdown(2, 0, service_name)
