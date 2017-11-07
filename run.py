@@ -25,6 +25,11 @@ def log_in(login, passwd):
     input_submit = driver.find_element_by_css_selector("form#loginForm input[type=submit]")
     input_submit.click()
 
+def select_service_group(service_group):
+    driver.find_element_by_css_selector("a[datasubcategory*={}]".format(service_group)).click()
+
+def select_appointment_button():
+    driver.find_element_by_xpath("//a[contains(@class, 'activity_button')][contains(text(),'Wizyta')]").click()
 
 def select_service(service_name):
     select_value_in_dropdown(2, 0, service_name)
@@ -104,6 +109,11 @@ def load_config():
 def perform_endless_search(config):
     open_page()
     log_in(config["luxmedUsername"], config["luxmedPassword"])
+    time.sleep(5)
+    select_service_group(config["serviceGroup"])
+    time.sleep(5)    
+    select_appointment_button()
+    time.sleep(5)    
     select_service(config["service"])
     select_person(config["person"])
     select_location(config["location"])

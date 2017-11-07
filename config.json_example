@@ -1,6 +1,7 @@
 {
   "luxmedUsername": "1234567",
   "luxmedPassword": "super-secret-password",
+  "serviceGroup": "Przezi",
   "service": "internisty",
   "person": "WĘGRZYN",
   "dateFrom": "20-09-2017",
