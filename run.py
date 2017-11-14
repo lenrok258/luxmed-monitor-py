@@ -35,6 +35,9 @@ def select_appointment_button():
         print "Appointment page not available"
 
 def select_service(service_name):
+    if not service_name:
+        return
+
     select_value_in_dropdown(2, 0, service_name)
 
 def select_person(person_name):
