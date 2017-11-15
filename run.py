@@ -10,8 +10,15 @@ from selenium.webdriver.common.keys import Keys
 
 from logger import Logger
 
-driver = webdriver.Chrome()
 log = Logger()
+
+with open('config.json') as data_file:
+    config = json.load(data_file)
+
+options = webdriver.ChromeOptions()
+if config['headless']:
+    options.add_argument('headless')
+driver = webdriver.Chrome(chrome_options=options)
 
 
 def open_page():
@@ -35,7 +42,7 @@ def log_in(login, passwd):
 
 
 def select_service_group(service_group):
-    log.info('Selecting service group {}', service_group)
+    log.info('Selecting service group "{}"', service_group)
     driver.find_element_by_css_selector('a[datasubcategory*="{}"]'.format(service_group)).click()
     log.info('Service group "{}" successfully selected', service_group)
 
@@ -125,12 +132,7 @@ def find_text(text):
     return text_found
 
 
-def load_config():
-    with open('config.json') as data_file:
-        return json.load(data_file)
-
-
-def perform_endless_search(config):
+def perform_endless_search():
     open_page()
     log_in(config["luxmedUsername"], config["luxmedPassword"])
     time.sleep(5)
@@ -161,10 +163,9 @@ def perform_endless_search(config):
 
 
 def main():
-    config = load_config()
     while True:
         try:
-            perform_endless_search(config)
+            perform_endless_search()
         except Exception as e:
             print e
 
