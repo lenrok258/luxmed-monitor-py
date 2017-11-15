@@ -5,3 +5,4 @@ ghostdriver.log
 config.json
 .vscode/
 a.log
+screenshots/*

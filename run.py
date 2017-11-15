@@ -10,21 +10,23 @@ from selenium.webdriver.common.keys import Keys
 
 from logger import Logger
 
-log = Logger()
-
 with open('config.json') as data_file:
     config = json.load(data_file)
 
 options = webdriver.ChromeOptions()
+options.add_argument('window-size=1600x900')
 if config['headless']:
     options.add_argument('headless')
 driver = webdriver.Chrome(chrome_options=options)
+
+log = Logger(driver)
 
 
 def open_page():
     log.info('Entering webpage')
     driver.get("https://portalpacjenta.luxmed.pl/PatientPortal/Reservations/Reservation/Find?firstTry=True")
     assert "LUX MED" in driver.title
+    log.screenshot('open_page')
     log.info('Lux med webpage opened')
 
 
@@ -42,6 +44,7 @@ def log_in(login, passwd):
 
 
 def select_service_group(service_group):
+    log.screenshot('select_service_group')
     log.info('Selecting service group "{}"', service_group)
     driver.find_element_by_css_selector('a[datasubcategory*="{}"]'.format(service_group)).click()
     log.info('Service group "{}" successfully selected', service_group)
@@ -50,6 +53,7 @@ def select_service_group(service_group):
 def select_appointment_button():
     try:
         log.info('Pressing "appointment" button')
+        log.screenshot('select_appointment_button')
         driver.find_element_by_xpath("//a[contains(@class, 'activity_button')][contains(text(),'Wizyta')]").click()
     except NoSuchElementException as e:
         log.warn("Appointment page not available")
@@ -61,6 +65,7 @@ def select_service(service_name):
 
     log.info('Selecting service: "{}"', service_name)
     select_value_in_dropdown(2, 0, service_name)
+    log.screenshot('select_service')
 
 
 def select_person(person_name):
@@ -69,6 +74,7 @@ def select_person(person_name):
 
     log.info('Selecting person: "{}"', person_name)
     select_value_in_dropdown(2, 1, person_name)
+    log.screenshot('select_person')
 
 
 def select_location(location):
@@ -77,6 +83,7 @@ def select_location(location):
 
     log.info('Selecting location: "{}"', location)
     select_value_in_dropdown(1, 1, location)
+    log.screenshot('select_location')
 
 
 def select_value_in_dropdown(column_index, selector_index, value_to_select):
@@ -89,6 +96,7 @@ def select_value_in_dropdown(column_index, selector_index, value_to_select):
     select_location_checkbox = driver.find_element_by_css_selector("ul#__selectOptions li:not(.hidden)")
     select_location_checkbox.click()
     driver.find_element_by_css_selector("body").click()
+    time.sleep(1)
 
 
 def select_dates(start_date, stop_date):
@@ -98,16 +106,19 @@ def select_dates(start_date, stop_date):
     time_picker_input.send_keys(start_date + '  |  ' + stop_date)
     driver.find_element_by_css_selector("body").click()
     driver.find_element_by_css_selector("body").click()
+    log.screenshot('select_dates')
 
 
 def submit_search_form():
     log.info("Performing search")
+    log.screenshot('submit_search_form')
     submit_button = driver.find_element_by_css_selector("input[type=submit]")
     submit_button.click()
 
 
 def close_popup():
     try:
+        log.screenshot('close_popup')
         driver.find_element_by_css_selector("div#__popup button.reject").click()
         log.info("Closing popup")
     except NoSuchElementException as e:
@@ -117,6 +128,7 @@ def close_popup():
 def any_free_slot():
     slots_elements = driver.find_elements_by_css_selector('.reserveTable')
     log.info("Free slots found: {}".format(slots_elements))
+    log.screenshot('any_free_slot')
     return len(slots_elements) != 0
 
 
@@ -154,7 +166,8 @@ def perform_endless_search():
         close_popup()
 
         if any_free_slot():
-            print "**** GOOOOOOT IT ****"
+            log.info("**** GOOOOOOT IT ****")
+            log.screenshot('free_slots_found')
             os.system("play ./sms_mario.wav")
             sys.exit(0)
             # driver.close()
