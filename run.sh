@@ -1,3 +1,5 @@
 #!/usr/bin/env bash
 
-env PATH=$PATH:./selenium-driver ./.env/bin/python run.py
+# -u = do not buffer print
+
+env PATH=$PATH:./selenium-driver ./.env/bin/python -u run.py
