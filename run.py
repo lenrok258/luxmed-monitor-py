@@ -163,6 +163,7 @@ def perform_endless_search():
     while True:
         time.sleep(5)
         submit_search_form()
+        time.sleep(3)        
         close_popup()
 
         if any_free_slot():
