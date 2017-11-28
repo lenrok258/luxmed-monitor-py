@@ -143,6 +143,9 @@ def find_text(text):
     text_found = re.findall(r'{}'.format(text), src)
     return text_found
 
+def print_success_ascii_art():
+    with open('success-asci-art.txt', 'r') as art_file:
+        print art_file.read()
 
 def perform_endless_search():
     open_page()
@@ -167,7 +170,7 @@ def perform_endless_search():
         close_popup()
 
         if any_free_slot():
-            log.info("**** GOOOOOOT IT ****")
+            print_success_ascii_art()
             log.screenshot('free_slots_found')
             os.system("play ./sms_mario.wav")
             sys.exit(0)
