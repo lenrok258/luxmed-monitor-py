@@ -126,10 +126,35 @@ def close_popup():
         log.info("Popup not found")
 
 
-def any_free_slot():
-    slots_elements = driver.find_elements_by_css_selector('.reserveTable')
-    log.info("Free slots found: {}".format(slots_elements))
-    log.screenshot('any_free_slot')
+def get_hour_from_slot(slot):
+    slot_time_text = slot.find_elements_by_css_selector("td.hours").text
+    return slot_time_text.split(':')[0]
+
+
+# TODO: Unify to one function and pass lambda
+def is_slot_before(slot, time_to_check):
+    hour = get_hour_from_slot(slot)
+    log.info("hour: {}".format(hour))
+    return False
+
+
+def is_slot_after(slot, time_to_check):
+    hour = get_hour_from_slot(slot)
+
+    pass
+
+
+def any_free_slot(time_from, time_to):
+    slots_elements = driver.find_elements_by_css_selector('.reserveTable tbody tr')
+    log.info("Number of all slots: {}".format(len(slots_elements)))
+    log.screenshot('all_slots')
+
+    log.info("Applying filters")
+    slots_elements = filter(lambda slot: is_slot_before(slot, time_from), slots_elements)
+    slots_elements = filter(lambda slot: is_slot_after(slot, time_to), slots_elements)
+
+    log.info("Number of matching slots: {}".format(len(slots_elements)))
+    log.screenshot('matching_slots')
     return len(slots_elements) != 0
 
 
@@ -172,7 +197,7 @@ def perform_endless_search():
         time.sleep(3)
         close_popup()
 
-        if any_free_slot():
+        if any_free_slot(config["timeFrom"], config["timeTo"]):
             print_success_ascii_art()
             log.screenshot('free_slots_found')
             os.system("play ./sms_mario.wav")
