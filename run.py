@@ -4,6 +4,7 @@ import random
 import re
 import sys
 import time
+
 from selenium import webdriver
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.common.keys import Keys
@@ -143,9 +144,11 @@ def find_text(text):
     text_found = re.findall(r'{}'.format(text), src)
     return text_found
 
+
 def print_success_ascii_art():
     with open('success-asci-art.txt', 'r') as art_file:
-        print art_file.read()
+        print(art_file.read())
+
 
 def perform_endless_search():
     open_page()
@@ -166,7 +169,7 @@ def perform_endless_search():
     while True:
         time.sleep(5)
         submit_search_form()
-        time.sleep(3)        
+        time.sleep(3)
         close_popup()
 
         if any_free_slot():
@@ -184,7 +187,7 @@ def main():
         try:
             perform_endless_search()
         except Exception as e:
-            print e
+            print(e)
 
 
 main()

@@ -6,3 +6,4 @@ config.json
 .vscode/
 a.log
 screenshots/*
+__pycache__/

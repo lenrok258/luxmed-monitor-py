@@ -2,7 +2,6 @@ from datetime import datetime
 
 
 class Logger:
-
     __SCREENSHOTS_DIR = 'screenshots'
 
     def __init__(self, webdriver):
@@ -22,8 +21,8 @@ class Logger:
         self.webdriver.save_screenshot(filepath)
 
     def __print(self, level, message, *args):
-        nowString = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-        messageFormatted = message.format(*args)
-        print '{0} [{1}]: {2}'.format(nowString,
+        now_string = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        message_formatted = message.format(*args)
+        print('{0} [{1}]: {2}'.format(now_string,
                                       level,
-                                      messageFormatted)
+                                      message_formatted))
