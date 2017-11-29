@@ -7,3 +7,4 @@ config.json
 a.log
 screenshots/*
 __pycache__/
+test.py

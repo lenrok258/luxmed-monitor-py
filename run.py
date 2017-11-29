@@ -122,39 +122,30 @@ def close_popup():
         log.screenshot('close_popup')
         driver.find_element_by_css_selector("div#__popup button.reject").click()
         log.info("Closing popup")
-    except NoSuchElementException as e:
+    except NoSuchElementException:
         log.info("Popup not found")
 
 
 def get_hour_from_slot(slot):
-    slot_time_text = slot.find_elements_by_css_selector("td.hours").text
-    return slot_time_text.split(':')[0]
+    slot_time_text = slot.find_element_by_css_selector("td.hours").text
+    hour = slot_time_text.split(':')[0]
+    return int(hour)
 
 
-# TODO: Unify to one function and pass lambda
-def is_slot_before(slot, time_to_check):
-    hour = get_hour_from_slot(slot)
-    log.info("hour: {}".format(hour))
-    return False
-
-
-def is_slot_after(slot, time_to_check):
-    hour = get_hour_from_slot(slot)
-
-    pass
+def is_slot_between(slot, time_from, time_to):
+    slot_hour = get_hour_from_slot(slot)
+    return time_from <= slot_hour <= time_to
 
 
 def any_free_slot(time_from, time_to):
     slots_elements = driver.find_elements_by_css_selector('.reserveTable tbody tr')
     log.info("Number of all slots: {}".format(len(slots_elements)))
-    log.screenshot('all_slots')
+    log.screenshot('any_free_slot')
 
-    log.info("Applying filters")
-    slots_elements = filter(lambda slot: is_slot_before(slot, time_from), slots_elements)
-    slots_elements = filter(lambda slot: is_slot_after(slot, time_to), slots_elements)
+    log.info("Applying time filters: from {} to {}", time_from, time_to)
+    slots_elements = list(filter(lambda slot: is_slot_between(slot, time_from, time_to), slots_elements))
 
     log.info("Number of matching slots: {}".format(len(slots_elements)))
-    log.screenshot('matching_slots')
     return len(slots_elements) != 0
 
 
