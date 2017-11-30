@@ -4,8 +4,6 @@
   Aby użyć narzędzia w innym systemie należy zmienić sterownik Selenium (katalog 'selenium-driver')
   oraz zmienić w pliku run.sh (os.system(...)) nazwe programu, ktory umie odtworzyc plik dzwiękowy .wav.
 
-# Plik config.json_example należy przekopiować do pliku config.json i odpowiednio wypełnić. Nazwe lekarza
-  ('person'), usługę ('service', w przypadku gdy jest automatycznie zaznaczona poprzez wybranie grupy usług na poprzedniej stronie) 
-  oraz placówkę ('location') można pozostawić pustą. Reszta pól jest wymagana.
+# Plik config_example.json należy przekopiować do pliku config.json i odpowiednio wypełnić.
 
 # Przed uruchomieniem ('run.sh') należy zainstalować zależności ('install.sh').
