@@ -16,7 +16,7 @@ with open('config.json') as data_file:
 
 options = webdriver.ChromeOptions()
 options.add_argument('window-size=1600x900')
-if config['headless']:
+if config['tool']['headless']:
     options.add_argument('headless')
 driver = webdriver.Chrome(chrome_options=options)
 
@@ -168,19 +168,19 @@ def print_success_ascii_art():
 
 def perform_endless_search():
     open_page()
-    log_in(config["luxmedUsername"], config["luxmedPassword"])
+    log_in(config['credentials']['luxmedUsername'], config['credentials']['luxmedPassword'])
     time.sleep(5)
-    select_service_group(config["serviceGroup"])
+    select_service_group(config['search']['serviceGroup'])
     time.sleep(5)
     select_appointment_button()
     time.sleep(5)
-    select_service(config["service"])
+    select_service(config['search']['service'])
     time.sleep(2)
-    select_person(config["person"])
+    select_person(config['search']['person'])
     time.sleep(2)
-    select_location(config["location"])
+    select_location(config['search']['location'])
     time.sleep(2)
-    select_dates(config["dateFrom"], config["dateTo"])
+    select_dates(config['search']['dateFrom'], config['search']['dateTo'])
 
     while True:
         time.sleep(5)
@@ -188,7 +188,7 @@ def perform_endless_search():
         time.sleep(3)
         close_popup()
 
-        if any_free_slot(config["timeFrom"], config["timeTo"]):
+        if any_free_slot(config['search']['timeFrom'], config['search']['timeTo']):
             print_success_ascii_art()
             log.screenshot('free_slots_found')
             os.system("play ./sms_mario.wav")

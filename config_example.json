@@ -1,7 +1,9 @@
 {
-    "search": {
+    "credentials": {
         "luxmedUsername": "1234567",
-        "luxmedPassword": "super-secret-password",
+        "luxmedPassword": "super-secret-password"
+    },
+    "search": {
         "serviceGroup": "Przezi",
         "service": "internisty",
         "person": "WĘGRZYN",
