@@ -19,6 +19,7 @@
     "email": {
         "username": "trolo@trolo.com",
         "password": "secretpass123",
-        "smtpUrl": "smtp.trolo.com:345"
+        "smtpUrl": "smtp.trolo.com:345",
+        "to": "waiting-for-email@trolo.com"
     }
 }
