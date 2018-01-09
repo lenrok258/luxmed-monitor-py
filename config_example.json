@@ -21,7 +21,6 @@
         "smtpPassword": "secretpass123",
         "smtpUrl": "smtp.trolo.com:345",
         "sender": "me-sending-this-email@o2.pl",
-        "reciepent": "waiting-for-email@trolo.com"
-
+        "recipient": "waiting-for-email@trolo.com"
     }
 }
