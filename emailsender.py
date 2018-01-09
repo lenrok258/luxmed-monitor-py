@@ -12,11 +12,25 @@ recipient = config["email"]["recipient"]
 
 
 def send_email(message):
+
+    email = """From: Lux Med monitor <{}>
+To: Szukajacy lekarza {}
+Subject: Lux med monitor mowi czesc
+
+Cos sie stalo: 
+{}
+""".format(sender, recipient, message)
+
+    msg = {}
+    msg['Subject'] = 'Test'
+    msg['From'] = sender
+    msg['To'] = recipient
+
     server = smtplib.SMTP(smtpUrl, timeout=5)
     server.starttls()
     server.set_debuglevel(True)
     server.login(smtpUsername, smtpPassword)
-    server.sendmail(sender, recipient, message)
+    server.sendmail(sender, recipient, email)
     server.quit()
 
 
