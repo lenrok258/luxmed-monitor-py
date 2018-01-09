@@ -17,9 +17,11 @@
         "headless": false
     },
     "email": {
-        "username": "trolo@trolo.com",
-        "password": "secretpass123",
+        "smtpUsername": "trolo@trolo.com",
+        "smtpPassword": "secretpass123",
         "smtpUrl": "smtp.trolo.com:345",
-        "to": "waiting-for-email@trolo.com"
+        "sender": "me-sending-this-email@o2.pl",
+        "reciepent": "waiting-for-email@trolo.com"
+
     }
 }
