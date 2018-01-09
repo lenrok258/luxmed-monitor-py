@@ -8,7 +8,7 @@ smtpUsername = config["email"]["smtpUsername"]
 smtpPassword = config["email"]["smtpPassword"]
 smtpUrl = config["email"]["smtpUrl"]
 sender = config["email"]["sender"]
-recipient = config["email"]["reciepent"]
+recipient = config["email"]["recipient"]
 
 
 def send_email(message):
@@ -18,3 +18,7 @@ def send_email(message):
     server.login(smtpUsername, smtpPassword)
     server.sendmail(sender, recipient, message)
     server.quit()
+
+
+# Test
+send_email("\nTest message")
