@@ -4,6 +4,7 @@ import random
 import re
 import sys
 import time
+import emailsender
 
 from selenium import webdriver
 from selenium.common.exceptions import NoSuchElementException
@@ -166,6 +167,14 @@ def print_success_ascii_art():
         print(art_file.read())
 
 
+def on_matching_slot_found():
+    print_success_ascii_art()
+    log.screenshot('free_slots_found')
+    os.system("play ./sms_mario.wav")
+    emailsender.send_email("on_matching_slot_found")
+    sys.exit(0)
+
+
 def perform_endless_search():
     open_page()
     log_in(config['credentials']['luxmedUsername'], config['credentials']['luxmedPassword'])
@@ -189,11 +198,7 @@ def perform_endless_search():
         close_popup()
 
         if any_free_slot(config['search']['timeFrom'], config['search']['timeTo']):
-            print_success_ascii_art()
-            log.screenshot('free_slots_found')
-            os.system("play ./sms_mario.wav")
-            sys.exit(0)
-            # driver.close()
+            on_matching_slot_found()
 
         sleep_for_a_moment()
 

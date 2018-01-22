@@ -4,7 +4,7 @@ from datetime import datetime
 class Logger:
     __SCREENSHOTS_DIR = 'screenshots'
 
-    def __init__(self, webdriver):
+    def __init__(self, webdriver=None):
         self.webdriver = webdriver
 
     def info(self, message, *args):

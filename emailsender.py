@@ -1,6 +1,10 @@
 import json
 import smtplib
 
+from logger import Logger
+
+log = Logger()
+
 with open('config.json') as data_file:
     config = json.load(data_file)
 
@@ -12,7 +16,6 @@ recipient = config["email"]["recipient"]
 
 
 def send_email(message):
-
     email = """From: Lux Med monitor <{}>
 To: Szukajacy lekarza {}
 Subject: Lux med monitor mowi czesc
@@ -26,13 +29,12 @@ Cos sie stalo:
     msg['From'] = sender
     msg['To'] = recipient
 
-    server = smtplib.SMTP(smtpUrl, timeout=5)
-    server.starttls()
-    server.set_debuglevel(True)
-    server.login(smtpUsername, smtpPassword)
-    server.sendmail(sender, recipient, email)
-    server.quit()
-
-
-# Test
-send_email("\nTest message")
+    try:
+        server = smtplib.SMTP(smtpUrl, timeout=5)
+        server.starttls()
+        server.set_debuglevel(True)
+        server.login(smtpUsername, smtpPassword)
+        server.sendmail(sender, recipient, email)
+        server.quit()
+    except Exception as e:
+        log.warn("Unable to send email. Error was: {}", e)
