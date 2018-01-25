@@ -98,7 +98,7 @@ def select_value_in_dropdown(column_index, selector_index, value_to_select):
     select_location_checkbox = driver.find_element_by_css_selector("ul#__selectOptions li:not(.hidden)")
     select_location_checkbox.click()
     driver.find_element_by_css_selector("body").click()
-    time.sleep(1)
+    time.sleep(3)
 
 
 def select_dates(start_date, stop_date):
@@ -190,6 +190,7 @@ def perform_endless_search():
     select_location(config['search']['location'])
     time.sleep(2)
     select_dates(config['search']['dateFrom'], config['search']['dateTo'])
+    time.sleep(2)
 
     while True:
         time.sleep(5)
