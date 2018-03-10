@@ -8,3 +8,7 @@ a.log
 screenshots/*
 __pycache__/
 test.py
+config_kze.json
+config_bsz.json
+config_sze.json
+config_mze.json
