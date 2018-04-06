@@ -11,6 +11,7 @@ with open('config.json') as data_file:
 smtpUsername = config["email"]["smtpUsername"]
 smtpPassword = config["email"]["smtpPassword"]
 smtpUrl = config["email"]["smtpUrl"]
+smtpPort = config["email"]["smtpPort"]
 sender = config["email"]["sender"]
 recipient = config["email"]["recipient"]
 
@@ -30,7 +31,7 @@ Cos sie stalo:
     msg['To'] = recipient
 
     try:
-        server = smtplib.SMTP(smtpUrl, timeout=5)
+        server = smtplib.SMTP(host=smtpUrl, port=smtpPort, timeout=5)
         server.starttls()
         server.set_debuglevel(True)
         server.login(smtpUsername, smtpPassword)
