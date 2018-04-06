@@ -19,7 +19,7 @@
     "email": {
         "smtpUsername": "trolo@trolo.com",
         "smtpPassword": "secretpass123",
-        "smtpUrl": "smtp.trolo.com:345",
+        "smtpUrl": "smtp.trolo.com",
         "smtpPort": 587,
         "sender": "me-sending-this-email@o2.pl",
         "recipient": "waiting-for-email@trolo.com"
