@@ -11,7 +11,7 @@ with open('config.json') as data_file:
 smtpUsername = config["email"]["smtpUsername"]
 smtpPassword = config["email"]["smtpPassword"]
 smtpUrl = config["email"]["smtpUrl"]
-smtpPort = config["email"]["smtpPort"]
+smtpPort = config["email"].get("smtpPort") # optional
 sender = config["email"]["sender"]
 recipient = config["email"]["recipient"]
 
