@@ -14,7 +14,8 @@
         "location": "LX Kraków - Al. Pokoju 5"
     },
     "tool": {
-        "headless": false
+        "headless": false,
+        "openBrowserOnSuccess": true
     },
     "email": {
         "smtpUsername": "trolo@trolo.com",

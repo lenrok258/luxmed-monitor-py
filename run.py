@@ -15,14 +15,15 @@ from logger import Logger
 with open('config.json') as data_file:
     config = json.load(data_file)
 
-options = webdriver.ChromeOptions()
-options.add_argument('window-size=1600x900')
-if config['tool']['headless']:
-    options.add_argument('headless')
-driver = webdriver.Chrome(chrome_options=options)
+def create_driver(headless):
+    options = webdriver.ChromeOptions()
+    options.add_argument('window-size=1600x900')
+    if headless:
+        options.add_argument('headless')
+    return webdriver.Chrome(chrome_options=options)
 
+driver = create_driver(config['tool']['headless'])
 log = Logger(driver)
-
 
 def open_page():
     log.info('Entering webpage')
@@ -166,19 +167,12 @@ def print_success_ascii_art():
     with open('success-asci-art.txt', 'r') as art_file:
         print(art_file.read())
 
-
-def on_matching_slot_found():
-    print_success_ascii_art()
-    log.screenshot('free_slots_found')
-    os.system("play ./sms_mario.wav")
-    emailsender.send_email("on_matching_slot_found")
-    sys.exit(0)
-
-
-def perform_endless_search():
+def perform_authentication():
     open_page()
     log_in(config['credentials']['luxmedUsername'], config['credentials']['luxmedPassword'])
     time.sleep(5)
+
+def fill_in_search_form():
     select_service_group(config['search']['serviceGroup'])
     time.sleep(5)
     select_appointment_button()
@@ -191,6 +185,29 @@ def perform_endless_search():
     time.sleep(2)
     select_dates(config['search']['dateFrom'], config['search']['dateTo'])
     time.sleep(2)
+
+def on_matching_slot_found():
+    print_success_ascii_art()
+    log.screenshot('free_slots_found')
+    os.system("play ./sms_mario.wav")
+    emailsender.send_email("on_matching_slot_found")
+    
+    # Open browser, log in and search
+    headless = config['tool'].get('headless')
+    openBrowserOnSuccess = config['tool'].get('openBrowserOnSuccess')
+    if headless and openBrowserOnSuccess:
+        log.info('Opening browser')
+        global driver
+        driver = create_driver(False)
+        perform_authentication()
+        fill_in_search_form()
+        submit_search_form()
+    
+    sys.exit(0)
+
+def perform_endless_search():
+    perform_authentication()
+    fill_in_search_form()
 
     while True:
         time.sleep(5)
