@@ -58,7 +58,7 @@ def select_appointment_button():
         log.info('Pressing "appointment" button')
         log.screenshot('select_appointment_button')
         driver.find_element_by_xpath("//a[contains(@class, 'activity_button')][contains(text(),'Wizyta')]").click()
-    except NoSuchElementException as e:
+    except NoSuchElementException:
         log.warn("Appointment page not available")
 
 
