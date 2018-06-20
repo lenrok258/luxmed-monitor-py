@@ -1,19 +1,21 @@
 import json
+
 import os
 import random
 import re
 import sys
 import time
-import emailsender
-
 from selenium import webdriver
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.common.keys import Keys
 
+import doctors
+import emailsender
 from logger import Logger
 
 with open('config.json') as data_file:
     config = json.load(data_file)
+
 
 def create_driver(headless):
     options = webdriver.ChromeOptions()
@@ -22,8 +24,10 @@ def create_driver(headless):
         options.add_argument('headless')
     return webdriver.Chrome(chrome_options=options)
 
+
 driver = create_driver(config['tool']['headless'])
 log = Logger(driver)
+
 
 def open_page():
     log.info('Entering webpage')
@@ -71,13 +75,15 @@ def select_service(service_name):
     log.screenshot('select_service')
 
 
-def select_person(person_name):
-    if not person_name:
+def select_doctor(current_doctor_name, next_doctor_name):
+    if not next_doctor_name:
         return
 
-    log.info('Selecting person: "{}"', person_name)
-    select_value_in_dropdown(2, 1, person_name)
-    log.screenshot('select_person')
+    log.info('Unselecting doctor name: "{}"', current_doctor_name)
+    unselect_value_in_dropdown(2, 1, current_doctor_name)
+    log.info('Selecting doctor name: "{}"', next_doctor_name)
+    select_value_in_dropdown(2, 1, next_doctor_name)
+    log.screenshot('select_doctor')
 
 
 def select_location(location):
@@ -87,6 +93,23 @@ def select_location(location):
     log.info('Selecting location: "{}"', location)
     select_value_in_dropdown(1, 1, location)
     log.screenshot('select_location')
+
+
+def unselect_value_in_dropdown(column_index, selector_index, value_to_unselect):
+    css_path = "form#advancedResevation div.column{} div.graphicSelectContainer".format(column_index)
+    select_location_dropdown = driver.find_elements_by_css_selector(css_path)[selector_index]
+    select_location_dropdown.click()
+    select_location_search = driver.find_element_by_css_selector("input.search-select")
+    select_location_search.clear()
+    select_location_search.send_keys(value_to_unselect)
+    try:
+        select_location_checkbox = driver.find_element_by_css_selector(
+            "ul#__selectOptions li:not(.hidden) input[type='checkbox']:checked")
+    except NoSuchElementException:
+        return
+    select_location_checkbox.click()
+    driver.find_element_by_css_selector("body").click()
+    time.sleep(3)
 
 
 def select_value_in_dropdown(column_index, selector_index, value_to_select):
@@ -152,7 +175,7 @@ def any_free_slot(time_from, time_to):
 
 
 def sleep_for_a_moment():
-    sleep_time = random.randint(1, 20)
+    sleep_time = random.randint(1, 12)
     log.info("About to sleep for {} seconds".format(sleep_time))
     time.sleep(sleep_time)
 
@@ -167,10 +190,12 @@ def print_success_ascii_art():
     with open('success-asci-art.txt', 'r') as art_file:
         print(art_file.read())
 
+
 def perform_authentication():
     open_page()
     log_in(config['credentials']['luxmedUsername'], config['credentials']['luxmedPassword'])
     time.sleep(5)
+
 
 def fill_in_search_form():
     select_service_group(config['search']['serviceGroup'])
@@ -179,19 +204,18 @@ def fill_in_search_form():
     time.sleep(5)
     select_service(config['search']['service'])
     time.sleep(2)
-    select_person(config['search']['person'])
-    time.sleep(2)
     select_location(config['search']['location'])
     time.sleep(2)
     select_dates(config['search']['dateFrom'], config['search']['dateTo'])
     time.sleep(2)
+
 
 def on_matching_slot_found():
     print_success_ascii_art()
     log.screenshot('free_slots_found')
     os.system("play ./sms_mario.wav")
     emailsender.send_email("on_matching_slot_found")
-    
+
     # Open browser, log in and search
     headless = config['tool'].get('headless')
     openBrowserOnSuccess = config['tool'].get('openBrowserOnSuccess')
@@ -202,8 +226,9 @@ def on_matching_slot_found():
         perform_authentication()
         fill_in_search_form()
         submit_search_form()
-    
+
     sys.exit(0)
+
 
 def perform_endless_search():
     perform_authentication()
@@ -211,6 +236,8 @@ def perform_endless_search():
 
     while True:
         time.sleep(5)
+        select_doctor(doctors.get_current_doctor(), doctors.get_next_doctor())
+        time.sleep(3)
         submit_search_form()
         time.sleep(3)
         close_popup()
