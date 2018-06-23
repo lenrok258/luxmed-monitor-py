@@ -1,10 +1,10 @@
 import json
-
 import os
 import random
 import re
 import sys
 import time
+
 from selenium import webdriver
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.common.keys import Keys
@@ -95,34 +95,46 @@ def select_location(location):
     log.screenshot('select_location')
 
 
-def unselect_value_in_dropdown(column_index, selector_index, value_to_unselect):
-    css_path = "form#advancedResevation div.column{} div.graphicSelectContainer".format(column_index)
-    select_location_dropdown = driver.find_elements_by_css_selector(css_path)[selector_index]
-    select_location_dropdown.click()
-    select_location_search = driver.find_element_by_css_selector("input.search-select")
-    select_location_search.clear()
-    select_location_search.send_keys(value_to_unselect)
-    try:
-        select_location_checkbox = driver.find_element_by_css_selector(
-            "ul#__selectOptions li:not(.hidden) input[type='checkbox']:checked")
-    except NoSuchElementException:
-        return
-    select_location_checkbox.click()
-    driver.find_element_by_css_selector("body").click()
-    time.sleep(3)
-
-
 def select_value_in_dropdown(column_index, selector_index, value_to_select):
-    css_path = "form#advancedResevation div.column{} div.graphicSelectContainer".format(column_index)
-    select_location_dropdown = driver.find_elements_by_css_selector(css_path)[selector_index]
-    select_location_dropdown.click()
-    select_location_search = driver.find_element_by_css_selector("input.search-select")
-    select_location_search.clear()
-    select_location_search.send_keys(value_to_select)
-    select_location_checkbox = driver.find_element_by_css_selector("ul#__selectOptions li:not(.hidden)")
-    select_location_checkbox.click()
-    driver.find_element_by_css_selector("body").click()
+    dropdown_item = fetch_item_from_dropdown(column_index, selector_index, value_to_select)
+    dropdown_item.click()
+    close_dropdown()
     time.sleep(3)
+
+
+def unselect_value_in_dropdown(column_index, selector_index, value_to_unselect):
+    dropdown_item = fetch_item_from_dropdown(column_index, selector_index, value_to_unselect)
+    try:
+        # checking if checkbox is checked - sooo ugly, will refactor... I promise!
+        dropdown_item.find_element_by_css_selector("input[type='checkbox']:checked")
+        dropdown_item.click()
+    except NoSuchElementException:
+        pass
+    close_dropdown()
+    time.sleep(3)
+
+
+def fetch_item_from_dropdown(column_index, selector_index, item_value):
+    click_on_dropdown(column_index, selector_index)
+    dropdown_search = driver.find_element_by_css_selector("input.search-select")
+    dropdown_search.clear()
+    dropdown_search.send_keys(item_value)
+    dropdown_item = driver.find_element_by_css_selector("ul#__selectOptions li:not(.hidden)")
+    return dropdown_item
+
+
+def close_dropdown():
+    # There is an invisible overlay which has to be destroyed by clicking on any clickable item underneath
+    from selenium.webdriver.common.action_chains import ActionChains
+    actions = ActionChains(driver)
+    body = driver.find_element_by_css_selector("a.logo")
+    actions.move_to_element(body).click().perform()
+
+
+def click_on_dropdown(column_index, selector_index):
+    css_path = "form#advancedResevation div.column{} div.graphicSelectContainer".format(column_index)
+    dropdown = driver.find_elements_by_css_selector(css_path)[selector_index]
+    dropdown.click()
 
 
 def select_dates(start_date, stop_date):

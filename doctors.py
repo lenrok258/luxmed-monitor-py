@@ -21,5 +21,9 @@ def get_current_doctor():
 
 def get_next_doctor():
     global __last_selected_doctor_index
+
+    if not __doctors:
+        return ""
+
     __last_selected_doctor_index = (__last_selected_doctor_index + 1) % __number_of_doctors
     return get_current_doctor()
