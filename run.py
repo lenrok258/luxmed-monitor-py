@@ -71,7 +71,7 @@ def select_service(service_name):
         return
 
     log.info('Selecting service: "{}"', service_name)
-    select_value_in_dropdown(2, 0, service_name)
+    select_value_in_dropdown(2, service_name)
     log.screenshot('select_service')
 
 
@@ -80,9 +80,9 @@ def select_doctor(current_doctor_name, next_doctor_name):
         return
 
     log.info('Unselecting doctor name: "{}"', current_doctor_name)
-    unselect_value_in_dropdown(2, 1, current_doctor_name)
+    unselect_value_in_dropdown(3, current_doctor_name)
     log.info('Selecting doctor name: "{}"', next_doctor_name)
-    select_value_in_dropdown(2, 1, next_doctor_name)
+    select_value_in_dropdown(3, next_doctor_name)
     log.screenshot('select_doctor')
 
 
@@ -91,19 +91,19 @@ def select_location(location):
         return
 
     log.info('Selecting location: "{}"', location)
-    select_value_in_dropdown(1, 1, location)
+    select_value_in_dropdown(1, location)
     log.screenshot('select_location')
 
 
-def select_value_in_dropdown(column_index, selector_index, value_to_select):
-    dropdown_item = fetch_item_from_dropdown(column_index, selector_index, value_to_select)
+def select_value_in_dropdown(selector_index, value_to_select):
+    dropdown_item = fetch_item_from_dropdown(selector_index, value_to_select)
     dropdown_item.click()
     close_dropdown()
     time.sleep(3)
 
 
-def unselect_value_in_dropdown(column_index, selector_index, value_to_unselect):
-    dropdown_item = fetch_item_from_dropdown(column_index, selector_index, value_to_unselect)
+def unselect_value_in_dropdown(selector_index, value_to_unselect):
+    dropdown_item = fetch_item_from_dropdown(selector_index, value_to_unselect)
     try:
         # checking if checkbox is checked - sooo ugly, will refactor... I promise!
         dropdown_item.find_element_by_css_selector("input[type='checkbox']:checked")
@@ -114,8 +114,8 @@ def unselect_value_in_dropdown(column_index, selector_index, value_to_unselect):
     time.sleep(3)
 
 
-def fetch_item_from_dropdown(column_index, selector_index, item_value):
-    click_on_dropdown(column_index, selector_index)
+def fetch_item_from_dropdown(selector_index, item_value):
+    click_on_dropdown(selector_index)
     dropdown_search = driver.find_element_by_css_selector("input.search-select")
     dropdown_search.clear()
     dropdown_search.send_keys(item_value)
@@ -131,8 +131,8 @@ def close_dropdown():
     actions.move_to_element(body).click().perform()
 
 
-def click_on_dropdown(column_index, selector_index):
-    css_path = "form#advancedResevation div.column{} div.graphicSelectContainer".format(column_index)
+def click_on_dropdown(selector_index):
+    css_path = "form#advancedResevation div.column div.graphicSelectContainer"
     dropdown = driver.find_elements_by_css_selector(css_path)[selector_index]
     dropdown.click()
 
