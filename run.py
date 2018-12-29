@@ -187,7 +187,7 @@ def any_free_slot(time_from, time_to):
 
 
 def sleep_for_a_moment():
-    sleep_time = random.randint(1, 12)
+    sleep_time = random.randint(30, 60)
     log.info("About to sleep for {} seconds".format(sleep_time))
     time.sleep(sleep_time)
 
